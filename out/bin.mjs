@@ -1,13 +1,13 @@
 import { red, grey, bold, magenta, cyan, yellow, dim } from 'kleur';
-import setupDebug$1 from 'debug';
+import debug from 'debug';
 import ora from 'ora';
 import prompts from 'prompts';
 import ms from 'ms';
 import { s as scripts } from './index-Dn6UDCQK.mjs';
 import { A as AppError, U as UsageError } from './errors-D_qFVF3w.mjs';
 
-const setupDebug = setupDebug$1('bin');
-const getopts = require('getopts');
+const setupDebug = debug('bin');
+const getopts = import('getopts');
 const loadPackage = () => import('../package.json');
 const colorOption = (option, alias) => cyan(`--${option}${alias ? dim(`, -${alias}`) : ''}`);
 const table = (lines, indent = '  ') => {

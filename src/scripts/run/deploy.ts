@@ -2,15 +2,15 @@ import { join, extname } from 'path';
 import { promises as fsp } from 'fs';
 import readdirp from 'readdirp';
 import { DataType, NodeClass } from 'node-opcua';
-import setupDebug from 'debug';
+import debug from 'debug';
 import type * as Atscm from 'atscm';
 import { load } from '../../lib/config';
 import type { ScriptRunnerOptions } from '..';
 import { readJson } from '../../lib/fs';
 import { EntryInfo } from 'readdirp';
 
-const debug = setupDebug('deploy');
-const AtscmApi = require('atscm/api');
+const setupDebug = debug('deploy');
+const AtscmApi = import('atscm/api');
 
 let atscm: typeof Atscm;
 let atscmApi: typeof AtscmApi;
@@ -37,7 +37,7 @@ export class PathCreator {
           value: {},
         });
 
-        debug(`Created folder '${current}'`);
+        setupDebug(`Created folder '${current}'`);
 
         this.created.add(current);
       }
@@ -95,11 +95,11 @@ export async function deployFile(
   const [{ value: createdNode }] = result.outputArguments[3].value;
 
   if (!createdNode) {
-    debug(`'${nodeId}' already exists, overwriting...`);
+    setupDebug(`'${nodeId}' already exists, overwriting...`);
     await atscmApi.writeNode(nodeId, value);
   }
 
-  debug(`Deployed '${nodeId}'`);
+  setupDebug(`Deployed '${nodeId}'`);
 }
 
 export default async function runDeploy({

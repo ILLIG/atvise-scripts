@@ -2,16 +2,16 @@
 
 'use strict';
 
-var kleur = require('kleur');
-var setupDebug$1 = require('debug');
-var ora = require('ora');
-var prompts = require('prompts');
-var ms = require('ms');
-var index = require('./index-Cp7kYSmB.js');
-var errors = require('./errors-BAcmNQ9_.js');
+var kleur = import('kleur');
+var debug = import('debug');
+var ora = import('ora');
+var prompts = import('prompts');
+var ms = import('ms');
+var index = import('./index-Cp7kYSmB.js');
+var errors = import('./errors-BAcmNQ9_.js');
 
-const setupDebug = setupDebug$1('bin');
-const getopts = require('getopts');
+const setupDebug = debug('bin');
+const getopts = import('getopts');
 const loadPackage = () => import('../package.json');
 const colorOption = (option, alias) => kleur.cyan(`--${option}${alias ? kleur.dim(`, -${alias}`) : ''}`);
 const table = (lines, indent = '  ') => {
