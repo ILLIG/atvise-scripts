@@ -1,6 +1,6 @@
 {
   "name": "atvise-scripts",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "description": "The scripts used by create-atvise-app to interact with atvise server",
   "license": "MIT",
   "repository": {
@@ -23,9 +23,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "update-config-definitions": "node ./scripts/update-config-definitions"
   },
-  "peerDependencies": {
-    "node-opcua": "*"
-  },
   "dependencies": {
     "atscm": "^1.0.1",
     "debug": "^4.1.1",
@@ -33,7 +30,7 @@
     "getopts": "^2.2.5",
     "kleur": "^4.0.2",
     "ms": "^2.1.2",
-    "node-opcua": "0.0.60",
+    "node-opcua": "^0.5.5",
     "ora": "^4.0.4",
     "prompts": "^2.3.2",
     "readdirp": "^3.4.0",
