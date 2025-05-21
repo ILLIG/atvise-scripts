@@ -1,6 +1,6 @@
 {
   "name": "atvise-scripts",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "The scripts used by create-atvise-app to interact with atvise server",
   "license": "MIT",
   "repository": {
@@ -24,7 +24,7 @@
     "update-config-definitions": "node ./scripts/update-config-definitions"
   },
   "dependencies": {
-    "atscm": "^1.5.2",
+    "atscm": "github:ILLIG/atscm-new",
     "debug": "^4.1.1",
     "deepmerge": "^4.2.2",
     "getopts": "^2.2.5",
