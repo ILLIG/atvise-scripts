@@ -8,7 +8,6 @@
     "target": "esnext",
     "noEmit": true,
     "noEmitOnError": false,
-    "strict": true,
-    "allowSyntheticDefaultImports": true
+    "strict": true
   }
 }

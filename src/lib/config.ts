@@ -1,6 +1,6 @@
 import merge from 'deepmerge';
 import setupDebug from 'debug';
-import {writeJsonFile} from 'write-json-file';
+import writeJsonFile from 'write-json-file';
 import { Atviserc } from '../types/Atviserc';
 import type { ConfirmHook } from '../scripts';
 import { AppError } from './errors';
@@ -16,7 +16,7 @@ export type Config = FullAtviserc & {
   deploy: FullAtviserc['deploy'] & {
     outPath: string[];
   };
-  login?: {isLoggedIn: boolean, username: string, password: string};
+  login?: {isLoggedIn: boolean, username: string, password: string}
 };
 
 export const defaults: Config = {
@@ -72,7 +72,7 @@ export async function load({
   try {
     raw = await import(path);
     debug(`Loaded config from '${path}'`);
-  } catch (error: unknown) {
+  } catch (error) {
     if (
       fallbackToDefaults ||
       (await confirmFallback?.(
@@ -81,15 +81,9 @@ export async function load({
     )
       return defaults;
 
-    if (error instanceof Error) {
-      throw AppError.from(error, 'Failed to load config file', {
-        tips: ["Run 'npx atvise-scripts init' first"],
-      });
-    } else {
-      throw AppError.from(new Error(String(error)), 'Failed to load config file', {
-        tips: ["Run 'npx atvise-scripts init' first"],
-      });
-    }
+    throw AppError.from(error, 'Failed to load config file', {
+      tips: ["Run 'npx atvise-scripts init' first"],
+    });
   }
 
   return normalize(merge(defaults, raw) as FullAtviserc);

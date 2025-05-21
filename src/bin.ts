@@ -1,13 +1,14 @@
+import getopts from 'getopts';
 import { bold, magenta, cyan, dim, red, yellow, grey } from 'kleur';
-import debug from 'debug';
-import ora, { Ora } from 'ora';;
+import setupDebug from 'debug';
+import ora from 'ora';
 import prompts from 'prompts';
 import ms from 'ms';
 import * as scripts from './scripts';
 import { UsageError, AppError } from './lib/errors';
 
-const setupDebug = debug('bin');
-const getopts = require('getopts') as typeof import('getopts');
+const debug = setupDebug('bin');
+
 const loadPackage = () => import('../package.json');
 
 const colorOption = (option: string, alias?: string) =>
@@ -63,7 +64,7 @@ export async function printUsage(context?: UsageContext): Promise<void> {
 export async function runScript(script: scripts.Script, scriptName: string) {
   const interactive = process.stdout.isTTY;
 
-  const spinner: Ora | undefined = interactive
+  const spinner: ora.Ora | undefined = interactive
     ? ora(`Running '${scriptName}'...`).start()
     : undefined;
 
@@ -130,7 +131,7 @@ export async function runScript(script: scripts.Script, scriptName: string) {
 }
 
 export async function runBin(argv = process.argv.slice(2)): Promise<void> {
-  setupDebug(`Running with argv '${argv.join(' ')}'`);
+  debug(`Running with argv '${argv.join(' ')}'`);
   const {
     _: [scriptName, ...positional],
     version,
@@ -159,9 +160,9 @@ export async function runBin(argv = process.argv.slice(2)): Promise<void> {
     return printUsage(scriptContext);
   }
 
- /*if (positional.length) {
+    /*if (positional.length) {
     throw new errors.UsageError(`Unhandled arguments '${positional.join(' ')}'`);
-  } */
+  } */// Get script
 
   // Get script
   if (!scriptName) {

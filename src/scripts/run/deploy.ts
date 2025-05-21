@@ -2,15 +2,14 @@ import { join, extname } from 'path';
 import { promises as fsp } from 'fs';
 import readdirp from 'readdirp';
 import { DataType, NodeClass } from 'node-opcua';
-import debug from 'debug';
+import setupDebug from 'debug';
 import type * as Atscm from 'atscm';
+import type * as AtscmApi from 'atscm/api';
 import { load } from '../../lib/config';
 import type { ScriptRunnerOptions } from '..';
 import { readJson } from '../../lib/fs';
-import { EntryInfo } from 'readdirp';
 
-const setupDebug = debug('deploy');
-const AtscmApi = import('atscm/api');
+const debug = setupDebug('deploy');
 
 let atscm: typeof Atscm;
 let atscmApi: typeof AtscmApi;
@@ -37,7 +36,7 @@ export class PathCreator {
           value: {},
         });
 
-        setupDebug(`Created folder '${current}'`);
+        debug(`Created folder '${current}'`);
 
         this.created.add(current);
       }
@@ -76,7 +75,7 @@ export function getTypeDefinition(path: string) {
 }
 
 export async function deployFile(
-  entry: EntryInfo,
+  entry: readdirp.EntryInfo,
   remotePath: string,
   { warn }: { warn: ScriptRunnerOptions['warn'] }
 ) {
@@ -95,11 +94,11 @@ export async function deployFile(
   const [{ value: createdNode }] = result.outputArguments[3].value;
 
   if (!createdNode) {
-    setupDebug(`'${nodeId}' already exists, overwriting...`);
+    debug(`'${nodeId}' already exists, overwriting...`);
     await atscmApi.writeNode(nodeId, value);
   }
 
-  setupDebug(`Deployed '${nodeId}'`);
+  debug(`Deployed '${nodeId}'`);
 }
 
 export default async function runDeploy({
@@ -116,15 +115,15 @@ export default async function runDeploy({
   process.env.ATSCM_PROJECT__PORT__OPC = `${config.port.opc}`;
   process.env.ATSCM_PROJECT__HOST = `${config.host}`;
 
-  if (config.login?.isLoggedIn) {
+  if (config.login) {
     process.env.ATSCM_PROJECT__LOGIN__USERNAME = config.login.username;
     process.env.ATSCM_PROJECT__LOGIN__PASSWORD = config.login.password;
 
     info(`deploy with login - user: ${process.env.ATSCM_PROJECT__LOGIN__USERNAME}`);
   }
 
-  atscm = await require('atscm');
-  atscmApi = await require('atscm/api');
+  atscm = await import('atscm');
+  atscmApi = await import('atscm/api');
 
   // Resolve remote base path from 'homepage' field in package.json
   const pkg = await readJson('./package.json');
@@ -143,6 +142,7 @@ export default async function runDeploy({
   let args = process.argv.slice(2);
   const ignoredPaths = [];
   const pathOnly = [];
+
   console.log("");
   if (args.includes("all")) {
     console.log(">>> deploymentConfig: deployAll");
