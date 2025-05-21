@@ -1,12 +1,12 @@
 import { bold, magenta, cyan, dim, red, yellow, grey } from 'kleur';
-import setupDebug from 'debug';
+import debug from 'debug';
 import ora, { Ora } from 'ora';;
 import prompts from 'prompts';
 import ms from 'ms';
 import * as scripts from './scripts';
 import { UsageError, AppError } from './lib/errors';
 
-const debug = setupDebug('bin');
+const setupDebug = debug('bin');
 const getopts = require('getopts') as typeof import('getopts');
 const loadPackage = () => import('../package.json');
 
@@ -130,7 +130,7 @@ export async function runScript(script: scripts.Script, scriptName: string) {
 }
 
 export async function runBin(argv = process.argv.slice(2)): Promise<void> {
-  debug(`Running with argv '${argv.join(' ')}'`);
+  setupDebug(`Running with argv '${argv.join(' ')}'`);
   const {
     _: [scriptName, ...positional],
     version,
