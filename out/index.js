@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var index = require('./index-118f7abb.js');
+var index = require('./index-350599dc.js');
 
 const scriptRunner = script => options => {
   // FIXME: Lazy-load script modules
@@ -12,7 +12,6 @@ const scriptRunner = script => options => {
     ...options
   });
 };
-
 const deploy = scriptRunner(index.deploy);
 const prepare = scriptRunner(index.prepare);
 

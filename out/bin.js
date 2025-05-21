@@ -25,30 +25,25 @@ function _interopNamespace(e) {
   }
 }
 
-var index = require('./index-118f7abb.js');
+var index = require('./index-350599dc.js');
 var getopts = _interopDefault(require('getopts'));
 var kleur = require('kleur');
 var setupDebug = _interopDefault(require('debug'));
 var ora = _interopDefault(require('ora'));
 var prompts = _interopDefault(require('prompts'));
 var ms = _interopDefault(require('ms'));
-var errors = require('./errors-52232f42.js');
+var errors = require('./errors-b4fe0374.js');
 
 const debug = setupDebug('bin');
-
 const loadPackage = () => Promise.resolve().then(function () { return _interopNamespace(require('../package.json')); });
-
 const colorOption = (option, alias) => kleur.cyan(`--${option}${alias ? kleur.dim(`, -${alias}`) : ''}`);
-
 const table = (lines, indent = '  ') => {
   const widths = lines.reduce((soFar, line) => soFar.map((s, i) => Math.max(s, line[i].length)), lines[0].map(() => 0));
   return `${indent}${lines.map(line => line.map((cell, i) => cell.padEnd(widths[i])).join(indent)).join(`\n${indent}`)}`;
 };
-
 const output = console;
 async function printUsage(context) {
   var _context$scriptName, _context$script$descr, _context$script;
-
   const pkg = await loadPackage();
   const binName = Object.keys(pkg.bin)[0];
   const usage = `${binName} ${(_context$scriptName = context === null || context === void 0 ? void 0 : context.scriptName) !== null && _context$scriptName !== void 0 ? _context$scriptName : '<script>'} [options]`;
@@ -56,11 +51,9 @@ async function printUsage(context) {
   const sections = [`${kleur.bold(`Usage: ${kleur.magenta(usage)}`)}
 
   ${description}`];
-
-  if (!(context === null || context === void 0 ? void 0 : context.script)) {
+  if (!(context !== null && context !== void 0 && context.script)) {
     sections.push(kleur.bold('Scripts:'), table(Object.values(index.scripts).map(script => [kleur.cyan(script.name), script.description])));
   }
-
   sections.push(kleur.bold('Options:'), table([[colorOption('version', 'v'), `Print ${binName} version and exit`], [colorOption('help', 'h'), `Print usage and exit`]]));
   output.log(`${sections.join('\n\n')}\n`);
 }
@@ -69,7 +62,6 @@ async function runScript(script, scriptName) {
   const spinner = interactive ? ora(`Running '${scriptName}'...`).start() : undefined;
   const progress = spinner ? text => spinner.text = `Running '${scriptName}': ${text}` : undefined;
   let persisted = false;
-
   const pauseSpinnerAsync = async fn => {
     if (persisted) {
       spinner === null || spinner === void 0 ? void 0 : spinner.stop();
@@ -77,17 +69,14 @@ async function runScript(script, scriptName) {
       spinner === null || spinner === void 0 ? void 0 : spinner.stopAndPersist();
       persisted = true;
     }
-
     const result = await fn();
     spinner === null || spinner === void 0 ? void 0 : spinner.start();
     return result;
   };
-
   const doInteractive = (fn, fallback) => {
     if (!process.stdout.isTTY) return fallback;
     return pauseSpinnerAsync(fn);
   };
-
   const pauseSpinnerAndLog = logFn => text => {
     if (persisted) {
       spinner === null || spinner === void 0 ? void 0 : spinner.stop();
@@ -95,13 +84,10 @@ async function runScript(script, scriptName) {
       spinner === null || spinner === void 0 ? void 0 : spinner.stopAndPersist();
       persisted = true;
     }
-
     logFn(text);
     spinner === null || spinner === void 0 ? void 0 : spinner.start();
   };
-
   const start = Date.now();
-
   try {
     await script.run({
       info: pauseSpinnerAndLog(text => output.info(kleur.grey(text))),
@@ -140,48 +126,40 @@ async function runBin(argv = process.argv.slice(2)) {
     unknown: option => {
       throw new errors.UsageError(`Unknown option '${option}'`);
     }
-  }); // Handle '--version'
-
+  });
+  // Handle '--version'
   if (version) {
     const pkg = await loadPackage();
     return output.log(pkg.version);
   }
-
   const script = index.scripts[scriptName];
   const scriptContext = script && {
     scriptName,
     script
-  }; // Handle '--help'
-
+  };
+  // Handle '--help'
   if (help) {
     return printUsage(scriptContext);
   }
-
   /*if (positional.length) {
-    throw new errors.UsageError(`Unhandled arguments '${positional.join(' ')}'`);
-  } */// Get script
-
-
+  throw new errors.UsageError(`Unhandled arguments '${positional.join(' ')}'`);
+  } */ // Get script
+  // Get script
   if (!scriptName) {
     throw new errors.UsageError('No script name passed');
   }
-
   if (!script) {
     throw new errors.UsageError(`Unknown script '${scriptName}'`);
   }
-
   await runScript(script, scriptName);
 }
-
 if (!module.parent) {
   runBin().catch(async error => {
     if (error instanceof errors.AppError) {
       if (error instanceof errors.UsageError) {
         await printUsage();
       }
-
       output.error(kleur.red(error.message));
-
       if (error.tips.length) {
         output.info();
         error.tips.forEach(tip => output.info(kleur.grey(` - ${tip}`)));
@@ -189,7 +167,6 @@ if (!module.parent) {
     } else {
       output.error(error);
     }
-
     process.exitCode = 1;
   });
 }
