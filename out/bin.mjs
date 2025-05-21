@@ -1,12 +1,12 @@
 import { red, grey, bold, magenta, cyan, yellow, dim } from 'kleur';
-import setupDebug from 'debug';
+import setupDebug$1 from 'debug';
 import ora from 'ora';
 import prompts from 'prompts';
 import ms from 'ms';
 import { s as scripts } from './index-Dn6UDCQK.mjs';
 import { A as AppError, U as UsageError } from './errors-D_qFVF3w.mjs';
 
-const debug = setupDebug('bin');
+const setupDebug = setupDebug$1('bin');
 const getopts = require('getopts');
 const loadPackage = () => import('../package.json');
 const colorOption = (option, alias) => cyan(`--${option}${alias ? dim(`, -${alias}`) : ''}`);
@@ -86,7 +86,7 @@ async function runScript(script, scriptName) {
   }
 }
 async function runBin(argv = process.argv.slice(2)) {
-  debug(`Running with argv '${argv.join(' ')}'`);
+  setupDebug(`Running with argv '${argv.join(' ')}'`);
   const {
     _: [scriptName, ...positional],
     version,

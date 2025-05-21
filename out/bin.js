@@ -2,16 +2,16 @@
 
 'use strict';
 
-const kleur = import('kleur');
-var setupDebug = import('debug');
-const ora = import('ora');
-var prompts = import('propmts');
-var ms = import('ms')
-var index = import('./index-Cp7kYSmB.js');
-var errors = import('./errors-BAcmNQ9_.js');
+var kleur = require('kleur');
+var setupDebug$1 = require('debug');
+var ora = require('ora');
+var prompts = require('prompts');
+var ms = require('ms');
+var index = require('./index-Cp7kYSmB.js');
+var errors = require('./errors-BAcmNQ9_.js');
 
-const debug = setupDebug('bin');
-const getopts = import('getopts');
+const setupDebug = setupDebug$1('bin');
+const getopts = require('getopts');
 const loadPackage = () => import('../package.json');
 const colorOption = (option, alias) => kleur.cyan(`--${option}${alias ? kleur.dim(`, -${alias}`) : ''}`);
 const table = (lines, indent = '  ') => {
@@ -90,7 +90,7 @@ async function runScript(script, scriptName) {
   }
 }
 async function runBin(argv = process.argv.slice(2)) {
-  debug(`Running with argv '${argv.join(' ')}'`);
+  setupDebug(`Running with argv '${argv.join(' ')}'`);
   const {
     _: [scriptName, ...positional],
     version,
