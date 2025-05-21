@@ -159,9 +159,9 @@ export async function runBin(argv = process.argv.slice(2)): Promise<void> {
     return printUsage(scriptContext);
   }
 
-  if (positional.length) {
-    throw new UsageError(`Unhandled arguments '${positional.join(' ')}'`);
-  }
+ /*if (positional.length) {
+    throw new errors.UsageError(`Unhandled arguments '${positional.join(' ')}'`);
+  } */
 
   // Get script
   if (!scriptName) {

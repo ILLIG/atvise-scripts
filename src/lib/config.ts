@@ -16,6 +16,7 @@ export type Config = FullAtviserc & {
   deploy: FullAtviserc['deploy'] & {
     outPath: string[];
   };
+  login?: {isLoggedIn: boolean, username: string, password: string};
 };
 
 export const defaults: Config = {
@@ -27,6 +28,11 @@ export const defaults: Config = {
   deploy: {
     outPath: ['out', 'build'],
   },
+  login: {
+    isLoggedIn: false,
+    username: "",
+    password: ""
+  }
 };
 
 export function normalize(atviserc: FullAtviserc): Config {

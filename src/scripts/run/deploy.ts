@@ -10,7 +10,7 @@ import { readJson } from '../../lib/fs';
 import { EntryInfo } from 'readdirp';
 
 const debug = setupDebug('deploy');
-const AtscmApi = require('atscm/api'); 
+const AtscmApi = require('atscm/api');
 
 let atscm: typeof Atscm;
 let atscmApi: typeof AtscmApi;
@@ -116,8 +116,15 @@ export default async function runDeploy({
   process.env.ATSCM_PROJECT__PORT__OPC = `${config.port.opc}`;
   process.env.ATSCM_PROJECT__HOST = `${config.host}`;
 
+  if (config.login?.isLoggedIn) {
+    process.env.ATSCM_PROJECT__LOGIN__USERNAME = config.login.username;
+    process.env.ATSCM_PROJECT__LOGIN__PASSWORD = config.login.password;
+
+    info(`deploy with login - user: ${process.env.ATSCM_PROJECT__LOGIN__USERNAME}`);
+  }
+
   atscm = await require('atscm');
-  atscmApi = await require('atscm/api'); 
+  atscmApi = await require('atscm/api');
 
   // Resolve remote base path from 'homepage' field in package.json
   const pkg = await readJson('./package.json');
@@ -133,8 +140,34 @@ export default async function runDeploy({
 
   let count = 0;
 
+  let args = process.argv.slice(2);
+  const ignoredPaths = [];
+  const pathOnly = [];
+  console.log("");
+  if (args.includes("all")) {
+    console.log(">>> deploymentConfig: deployAll");
+  } else if (args.includes("configOnly")) {
+    console.log(">>> deploymentConfig: configOnly (only config folder)");
+    pathOnly.push("config");
+  } else if (args.includes("codeOnly")) {
+    ignoredPaths.push("config");
+    console.log(">>> deploymentConfig: codeOnly (exclude config folder)");
+  } else {
+    ignoredPaths.push(...["assets", "licenses"]);
+    console.log(">>> deploymentConfig: default (exclude assets/licenses folder)");
+  }
+
   for (const root of config.deploy.outPath) {
     for await (const entry of readdirp(root)) {
+
+      if (ignoredPaths.some(ignoredPath => entry.path.startsWith(ignoredPath))) {
+        continue;
+      }
+
+      if (pathOnly.length > 0 && !pathOnly.some(optionPath => entry.path.startsWith(optionPath))) {
+        continue;
+      }
+
       const remotePath = join(base, entry.path);
 
       await paths.ensurePath(remotePath);
