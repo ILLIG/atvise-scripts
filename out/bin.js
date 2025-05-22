@@ -2,40 +2,17 @@
 
 'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-function _interopNamespace(e) {
-  if (e && e.__esModule) { return e; } else {
-    var n = {};
-    if (e) {
-      Object.keys(e).forEach(function (k) {
-        var d = Object.getOwnPropertyDescriptor(e, k);
-        Object.defineProperty(n, k, d.get ? d : {
-          enumerable: true,
-          get: function () {
-            return e[k];
-          }
-        });
-      });
-    }
-    n['default'] = e;
-    return n;
-  }
-}
-
-var index = require('./index-9ba929bb.js');
-var getopts = _interopDefault(require('getopts'));
+var getopts = require('getopts');
 var kleur = require('kleur');
-var setupDebug = _interopDefault(require('debug'));
-var ora = _interopDefault(require('ora'));
-var prompts = _interopDefault(require('prompts'));
-var ms = _interopDefault(require('ms'));
-var errors = require('./errors-b4fe0374.js');
+var setupDebug = require('debug');
+var ora = require('ora');
+var prompts = require('prompts');
+var ms = require('ms');
+var index = require('./index-Bkm9PAJ1.js');
+var errors = require('./errors-BAcmNQ9_.js');
 
 const debug = setupDebug('bin');
-const loadPackage = () => Promise.resolve().then(function () { return _interopNamespace(require('../package.json')); });
+const loadPackage = () => import('../package.json');
 const colorOption = (option, alias) => kleur.cyan(`--${option}${alias ? kleur.dim(`, -${alias}`) : ''}`);
 const table = (lines, indent = '  ') => {
   const widths = lines.reduce((soFar, line) => soFar.map((s, i) => Math.max(s, line[i].length)), lines[0].map(() => 0));

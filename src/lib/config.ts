@@ -1,6 +1,6 @@
 import merge from 'deepmerge';
 import setupDebug from 'debug';
-import writeJsonFile from 'write-json-file';
+import {writeJsonFile} from 'write-json-file';
 import { Atviserc } from '../types/Atviserc';
 import type { ConfirmHook } from '../scripts';
 import { AppError } from './errors';

@@ -1,4 +1,4 @@
-import writePkg from 'write-pkg';
+import {writePackage} from 'write-package';
 import { load } from '../../lib/config';
 import { readJson } from '../../lib/fs';
 import type { ScriptRunnerOptions } from '..';
@@ -12,6 +12,6 @@ export default async function runPrepare({ info, confirm }: ScriptRunnerOptions)
   if (pkg.proxy !== proxyUrl) {
     info('Updating proxy settings...');
     pkg.proxy = proxyUrl;
-    writePkg('./package.json', pkg);
+    writePackage('./package.json', pkg);
   }
 }

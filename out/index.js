@@ -1,8 +1,6 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
-var index = require('./index-9ba929bb.js');
+var index = require('./index-Bkm9PAJ1.js');
 
 const scriptRunner = script => options => {
   // FIXME: Lazy-load script modules

@@ -1,17 +1,16 @@
-import { builtinModules } from 'module';
-import resolve from '@rollup/plugin-node-resolve';
-import typescript from '@rollup/plugin-typescript';
-import babel from '@rollup/plugin-babel';
-import addShebang from 'rollup-plugin-add-shebang';
-import { dependencies } from './package.json';
+const { builtinModules } = require('module');
+const resolve = require('@rollup/plugin-node-resolve').default;
+const typescript = require('@rollup/plugin-typescript');
+const babel = require('@rollup/plugin-babel').default;
+const addShebang = require('rollup-plugin-add-shebang');
+const { dependencies } = require('./package.json');
 
-export default {
+module.exports = {
   input: ['./src/index.ts', './src/bin.ts'],
   external: [
     ...builtinModules,
     ...Object.keys(dependencies),
     'atscm/api',
-    // For the '--version' flag
     '../package.json',
   ],
   plugins: [resolve(), typescript(), babel({ extensions: ['.ts', '.js'] }), addShebang()],
