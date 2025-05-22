@@ -24,7 +24,7 @@
     "update-config-definitions": "node ./scripts/update-config-definitions"
   },
   "dependencies": {
-    "atscm": "github:ILLIG/atscm-new",
+    "atscm": "github:ILLIG/atscm",
     "debug": "^4.1.1",
     "deepmerge": "^4.2.2",
     "getopts": "^2.2.5",
