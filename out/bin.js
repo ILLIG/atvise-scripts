@@ -25,7 +25,7 @@ function _interopNamespace(e) {
   }
 }
 
-var index = require('./index-b657aecc.js');
+var index = require('./index-22de38dc.js');
 var getopts = _interopDefault(require('getopts'));
 var kleur = require('kleur');
 var setupDebug = _interopDefault(require('debug'));

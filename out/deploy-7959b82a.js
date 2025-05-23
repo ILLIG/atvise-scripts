@@ -1,29 +1,52 @@
-import setupDebug from 'debug';
-import './errors-7571d5e7.mjs';
-import { join, extname } from 'path';
-import { promises } from 'fs';
-import readdirp from 'readdirp';
-import { NodeClass, DataType } from 'node-opcua';
-import 'deepmerge';
-import 'write-json-file';
-import { l as load } from './config-e772d1ae.mjs';
-import { r as readJson } from './fs-83043593.mjs';
+'use strict';
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+function _interopNamespace(e) {
+  if (e && e.__esModule) { return e; } else {
+    var n = {};
+    if (e) {
+      Object.keys(e).forEach(function (k) {
+        var d = Object.getOwnPropertyDescriptor(e, k);
+        Object.defineProperty(n, k, d.get ? d : {
+          enumerable: true,
+          get: function () {
+            return e[k];
+          }
+        });
+      });
+    }
+    n['default'] = e;
+    return n;
+  }
+}
+
+var setupDebug = _interopDefault(require('debug'));
+require('./errors-1d9b9f08.js');
+var path = require('path');
+var fs = require('fs');
+var readdirp = _interopDefault(require('readdirp'));
+var nodeOpcua = require('node-opcua');
+require('deepmerge');
+require('write-json-file');
+var config = require('./config-7bad29d8.js');
+var fs$1 = require('./fs-009f2a20.js');
 
 const debug = setupDebug('deploy');
 let atscm;
 let atscmApi;
-const resourceId = path => new atscm.NodeId(join('ns=1;s=SYSTEM.LIBRARY.PROJECT.RESOURCES', path));
+const resourceId = path$1 => new atscm.NodeId(path.join('ns=1;s=SYSTEM.LIBRARY.PROJECT.RESOURCES', path$1));
 class PathCreator {
   created = new Set();
-  async ensurePath(path) {
+  async ensurePath(path$1) {
     let current;
-    for (const part of path.split('/').slice(0, -1)) {
-      current = current ? join(current, part) : part;
+    for (const part of path$1.split('/').slice(0, -1)) {
+      current = current ? path.join(current, part) : part;
       if (!this.created.has(current)) {
         const nodeId = resourceId(current);
         await atscmApi.createNode(nodeId, {
           name: part,
-          nodeClass: NodeClass.Object,
+          nodeClass: nodeOpcua.NodeClass.Object,
           typeDefinition: 61,
           value: {}
         });
@@ -42,8 +65,8 @@ const typeDefinifions = new Map([['.css', 'VariableTypes.ATVISE.Resource.Css'], 
 ['.svg', ResourceType.Svg],
 // FIXME: Remove
 ['.json', 'VariableTypes.ATVISE.Resource.OctetStream'], ['.map', 'VariableTypes.ATVISE.Resource.OctetStream']]);
-function getTypeDefinition(path) {
-  const extension = extname(path);
+function getTypeDefinition(path$1) {
+  const extension = path.extname(path$1);
   const match = typeDefinifions.get(extension);
   if (!match) {
     return 'VariableTypes.ATVISE.Resource.OctetStream';
@@ -56,8 +79,8 @@ async function deployFile(entry, remotePath, {
   const nodeId = resourceId(remotePath);
   const typeDefinition = getTypeDefinition(entry.path);
   const value = {
-    dataType: DataType.ByteString,
-    value: await promises.readFile(entry.fullPath)
+    dataType: nodeOpcua.DataType.ByteString,
+    value: await fs.promises.readFile(entry.fullPath)
   };
   const result = await atscmApi.createNode(nodeId, {
     name: entry.basename,
@@ -79,23 +102,23 @@ async function runDeploy({
   confirm = () => false,
   info
 }) {
-  const config = await load({
+  const config$1 = await config.load({
     confirmFallback: confirm
   });
-  process.env.ATSCM_CONFIG_PATH = join(__dirname, '../Atviseproject.js');
+  process.env.ATSCM_CONFIG_PATH = path.join(__dirname, '../Atviseproject.js');
   // Patch atscm config
-  process.env.ATSCM_PROJECT__PORT__OPC = `${config.port.opc}`;
-  process.env.ATSCM_PROJECT__HOST = `${config.host}`;
-  if (config.login) {
-    process.env.ATSCM_PROJECT__LOGIN__USERNAME = config.login.username;
-    process.env.ATSCM_PROJECT__LOGIN__PASSWORD = config.login.password;
+  process.env.ATSCM_PROJECT__PORT__OPC = `${config$1.port.opc}`;
+  process.env.ATSCM_PROJECT__HOST = `${config$1.host}`;
+  if (config$1.login) {
+    process.env.ATSCM_PROJECT__LOGIN__USERNAME = config$1.login.username;
+    process.env.ATSCM_PROJECT__LOGIN__PASSWORD = config$1.login.password;
     info(`deploy with login - user: ${process.env.ATSCM_PROJECT__LOGIN__USERNAME}`);
   }
-  atscm = await import('atscm');
-  atscmApi = await import('atscm/api');
+  atscm = await Promise.resolve().then(function () { return _interopNamespace(require('atscm')); });
+  atscmApi = await Promise.resolve().then(function () { return _interopNamespace(require('atscm/api')); });
   // Resolve remote base path from 'homepage' field in package.json
-  const pkg = await readJson('./package.json');
-  let baseURL = new URL(`http://${config.host}:${config.port.http}`);
+  const pkg = await fs$1.readJson('./package.json');
+  let baseURL = new URL(`http://${config$1.host}:${config$1.port.http}`);
   if (pkg.homepage) {
     baseURL = new URL(pkg.homepage, baseURL);
     info(`Deploying to resource directory '.${baseURL.pathname}'`);
@@ -120,7 +143,7 @@ async function runDeploy({
     ignoredPaths.push(...["assets", "licenses"]);
     console.log(">>> deploymentConfig: default (exclude assets/licenses folder)");
   }
-  for (const root of config.deploy.outPath) {
+  for (const root of config$1.deploy.outPath) {
     for await (const entry of readdirp(root)) {
       if (ignoredPaths.some(ignoredPath => entry.path.startsWith(ignoredPath))) {
         continue;
@@ -128,7 +151,7 @@ async function runDeploy({
       if (pathOnly.length > 0 && !pathOnly.some(optionPath => entry.path.startsWith(optionPath))) {
         continue;
       }
-      const remotePath = join(base, entry.path);
+      const remotePath = path.join(base, entry.path);
       await paths.ensurePath(remotePath);
       await deployFile(entry, remotePath, {
         warn
@@ -142,5 +165,8 @@ async function runDeploy({
 `);
 }
 
-export default runDeploy;
-export { PathCreator, deployFile, getTypeDefinition, resourceId };
+exports.PathCreator = PathCreator;
+exports.default = runDeploy;
+exports.deployFile = deployFile;
+exports.getTypeDefinition = getTypeDefinition;
+exports.resourceId = resourceId;
