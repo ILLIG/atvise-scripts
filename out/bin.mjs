@@ -1,11 +1,11 @@
-import { s as scripts } from './index-59877a68.mjs';
+import { s as scripts } from './index-807ae196.mjs';
 import getopts from 'getopts';
 import { bold, magenta, cyan, dim, grey, yellow, red } from 'kleur';
 import setupDebug from 'debug';
 import ora from 'ora';
 import prompts from 'prompts';
 import ms from 'ms';
-import { U as UsageError, A as AppError } from './errors-b7e97dc5.mjs';
+import { U as UsageError, A as AppError } from './errors-7571d5e7.mjs';
 
 const debug = setupDebug('bin');
 const loadPackage = () => import('../package.json');

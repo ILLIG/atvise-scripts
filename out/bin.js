@@ -25,14 +25,14 @@ function _interopNamespace(e) {
   }
 }
 
-var index = require('./index-9ba929bb.js');
+var index = require('./index-b657aecc.js');
 var getopts = _interopDefault(require('getopts'));
 var kleur = require('kleur');
 var setupDebug = _interopDefault(require('debug'));
 var ora = _interopDefault(require('ora'));
 var prompts = _interopDefault(require('prompts'));
 var ms = _interopDefault(require('ms'));
-var errors = require('./errors-b4fe0374.js');
+var errors = require('./errors-1d9b9f08.js');
 
 const debug = setupDebug('bin');
 const loadPackage = () => Promise.resolve().then(function () { return _interopNamespace(require('../package.json')); });

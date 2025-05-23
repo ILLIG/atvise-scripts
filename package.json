@@ -1,16 +1,16 @@
 {
   "name": "atvise-scripts",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "The scripts used by create-atvise-app to interact with atvise server",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/atvise/create-atvise-app.git",
+    "url": "git+https://github.com/ILLIG/atvise-scripts.git",
     "directory": "packages/atvise-scripts"
   },
   "author": "Mendim Klimenta <npm@ls-age.com>",
   "bugs": {
-    "url": "https://github.com/atvise/create-atvise-app/issues"
+    "url": "https://github.com/ILLIG/atvise-scripts/issues"
   },
   "main": "out/index.js",
   "bin": {
@@ -51,6 +51,6 @@
     "rollup": "2.18.0",
     "rollup-plugin-add-shebang": "0.3.1",
     "tslib": "2.0.0",
-    "typescript": "3.9.5"
+    "typescript": "^5.8.3"
   }
 }
